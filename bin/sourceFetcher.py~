@@ -1,0 +1,47 @@
+from xml.dom.minidom import parseString
+import downloader
+
+class Requirement:
+	def __init__(self, name):
+		self.name = name
+		self.sources = {}
+
+class Source:
+	def fetch():
+		print 1
+		
+class TarballSource (Source):
+	def __init__(self, version, url):
+		self.version = version
+		self.url = url
+	
+ 
+class SourceFetcher:
+	def __init__(self, sourceListFile):
+		self.downloader = Downloader();
+		self.requirementList = {}
+		#open the sourceList xml file
+		file = open(sourceListFile,'r')
+		data = file.read()
+
+		#close file because we dont need it anymore:
+		file.close()
+
+		#parse the xml 
+		dom = parseString(data)
+
+		requirements = dom.getElementsByTagName('requirement')
+		for requirement in requirements:
+			r = Requirement(requirement.getAttribute('name'))
+			srcs = requirement.getElementsByTagName('src')
+			for src in srcs:
+				s = TarballSource(src.getAttribute('version'),src.getAttribute('url'))
+				r.sources[src.getAttribute('version')] = s
+			self.requirementList[requirement.getAttribute('name')] = r
+
+		print self.requirementList
+
+	def fetch(self,requirementName):
+
+
+sourceFetcher = SourceFetcher('config/sources.xml')

@@ -1,0 +1,8 @@
+<sourceList>
+	<requirement name="test">
+		<src version="A" type="tarball" url="http://www.kernel.org/pub/linux/kernel/v3.0/linux-3.4.6.tar.bz2"/>
+	</requirement>
+	<requirement name="linuxKernel">
+		<src version="3.4.6" type="tarball" url="http://www.kernel.org/pub/linux/kernel/v3.0/linux-3.4.6.tar.bz2"/>
+	</requirement>
+</sourceList>

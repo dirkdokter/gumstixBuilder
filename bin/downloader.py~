@@ -1,0 +1,30 @@
+import urllib2
+import threading
+
+class Downloader:
+	def httpFetch(self,fileName,url):
+		u = urllib2.urlopen(url)
+		f = open(fileName, 'wb')
+		meta = u.info()
+		fileSize = int(meta.getheaders("Content-Length")[0])
+		print "Downloading %s Size: %s kB" % (fileName, fileSize/1000)
+
+		numBytesFetched = 0
+		blockSize = 8192
+		while True:
+		    buffer = u.read(blockSize)
+		    if not buffer:
+			break
+
+		    numBytesFetched += len(buffer)
+		    f.write(buffer)
+		    status = r"%10d kB  [%3.2f%%]" % (numBytesFetched/1000, numBytesFetched * 100. / fileSize)
+		    status = status + chr(8)*(len(status)+1)
+		    print status,
+
+		f.close()
+
+downloader = Downloader();
+
+downloader.httpFetch('aaa.0','http://www.kernel.org/pub/linux/kernel/v3.0/linux-3.4.6.tar.bz2')
+
