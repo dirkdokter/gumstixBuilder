@@ -5,15 +5,38 @@ import os
 import errno
 
 
+buildingBlockTypes = { 'generic'		: GenericBuildingBlock,
+					   'linuxKernel'	: LinuxKernelBuildingBlock 
+					 }
+
+
 class BuildingBlock:
-	def __init__(self, name):
+	def __init__(self, name, domContent, sourceFetcher):
 		self.name = name
+		self.domContent = domContent
 		self.buildFolderName = None
+		self.sourceFetcher = sourceFetcher
+		
+		dependencyDoms = domContent.getElementsByTagName('depends')
+		for dependencyDom in dependencyDoms:
+			sourceFetcher.fetch(dependencyDom.getAttribute('name'), dependencyDom.getAttribute('version'))
+		
 	def build(self):
 		print "[ERROR] \t Build method missing."
+
+class GenericBuildingBlock (BuildingBlock):
+	def build(self):
+		print "[ERROR] \t Build method missing."
+
+class LinuxBuildingBlock (BuildingBlock):
+	def build(self):
+		linuxVersion = self.domContent.getElementsByTagName('version')[0];
+				
+		print "[ERROR] \t Build method missing."
+
 	
 class BuildScriptExecuter:
-	def __init__(self, buildScriptFile,buildFolder):
+	def __init__(self, buildScriptFile,buildFolder,SRC_FOLDER):
 		self.buildFolder = buildFolder
 		self.buildingBlocks = {}
 		#open the buildscript xml file
@@ -24,22 +47,15 @@ class BuildScriptExecuter:
 
 		dom = parseString(data)
 
-		requirements = dom.getElementsByTagName('requirement')
-		for requirement in requirements:
-			r = Requirement(requirement.getAttribute('name'))
-			srcs = requirement.getElementsByTagName('src')
-			for src in srcs:
-				type = src.getAttribute('type')
-				s = fileTypeHandlers[type](r.name,src.getAttribute('version'),src.getAttribute('url'))
-				r.sources[src.getAttribute('version')] = s
-			self.requirementList[requirement.getAttribute('name')] = r
+		sourceListDoms = dom.getElementsByTagName('sourceList')
+		slPath = sourceListDoms[0].getAttribute('file')
+		self.sourceFetcher = SourceFetcher(slPath,SRC_FOLDER);
 
-		print self.requirementList
-
-	def fetch(self,requirementName,version):
-		r = self.requirementList[requirementName]
-		s = r.sources[version]
-		#targetFolder = "%s/%s_v%s" % (self.rawSourcesFolder,requirementName, version)
-		
-		#s.fetchFile();
-		s.fetch(self.rawSourcesFolder);
+		buildingBlockDoms = dom.getElementsByTagName('buildingBlock')
+		for buildingBlockDom in buildingBlockDoms:
+			bb = buildingBlockTypes[buildingBlockDom.getAttribute('name'),buildingBlockDom,self.sourceFetcher]
+		self.buildingBlocks[bb.getAttribute('name')] = bb
+			
+	def startBuild(self,bbName):
+		bb = self.buildingBlocks[bbName]
+		bb.build()

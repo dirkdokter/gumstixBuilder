@@ -3,4 +3,7 @@
 		<src version="3.4.6" type="tarballBz2" url="http://www.kernel.org/pub/linux/kernel/v3.0/linux-3.4.6.tar.bz2"/>
 		<src version="3.5"   type="tarballBz2" url="ftp://ftp.tudelft.nl/pub/Linux/ftp.kernel.org/v3.x/linux-3.5.tar.bz2"/>
 	</requirement>
+	<requirement name="linuxKernelConfig">
+		<src version="3.5-r1" type="file" url="file:////"/>
+	</requirement>
 </sourceList>

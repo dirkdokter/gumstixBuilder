@@ -1,10 +1,10 @@
-<buildScript>
-	<sourceList include="sources.xml"/>
-	<kernel version="3.4.6">
-	</kernel>
-	<buildingBlocks>
-		<buildingBlock name="kernel">
-			
-		</buildingBlock>
-	</buildingBlocks>
+<buildScript system="Gumstix" arch="ARM">
+	<sourceList file="config/sources.xml"/>
+	
+	<buildingBlock name="linuxKernel" type="linuxKernel">
+		<depends name="linuxKernel"             version="3.5"/>
+		<depends name="linuxKernelConfigFiles"  version="r1"/>
+		<version>3.5</version>
+		<configFile>xxxxxxxxx</configFile>
+	</buildingBlock>
 </buildScript>
